@@ -28,3 +28,5 @@ UIKIT_EXTERN NSNotificationName const UIApplicationHandleWatchKitExtensionReques
 ```
 
 参考http://www.jianshu.com/p/a926fd605b7a
+
+代码中参考了BlocksKit和libextobjc的实现，感谢两位大神的精彩code
