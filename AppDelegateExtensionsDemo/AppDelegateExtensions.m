@@ -486,199 +486,202 @@ void installAppDelegateExtensionsWithClass(Class clazz)
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        SEL selectors[] = {
-            @selector(application:didRegisterUserNotificationSettings:),
-            @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:),
-            @selector(application:didFailToRegisterForRemoteNotificationsWithError:),
-            @selector(application:didReceiveRemoteNotification:),
-            @selector(application:didReceiveLocalNotification:),
-            @selector(application:handleOpenURL:),
-            @selector(application:openURL:sourceApplication:annotation:),
-            @selector(application:openURL:options:),
-            @selector(application:continueUserActivity:restorationHandler:),
-            @selector(application:performActionForShortcutItem:completionHandler:),
-            @selector(application:handleWatchKitExtensionRequest:reply:),
-        };
-        
+        @autoreleasepool {
+            SEL selectors[] = {
+                @selector(application:didRegisterUserNotificationSettings:),
+                @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:),
+                @selector(application:didFailToRegisterForRemoteNotificationsWithError:),
+                @selector(application:didReceiveRemoteNotification:),
+                @selector(application:didReceiveLocalNotification:),
+                @selector(application:handleOpenURL:),
+                @selector(application:openURL:sourceApplication:annotation:),
+                @selector(application:openURL:options:),
+                @selector(application:continueUserActivity:restorationHandler:),
+                @selector(application:performActionForShortcutItem:completionHandler:),
+                @selector(application:handleWatchKitExtensionRequest:reply:),
+            };
+            
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        id blocks[] = {
-            ^(NSObject *self, va_list arguments) {
-                id application = va_arg(arguments, id);
-                id settings = va_arg(arguments, id);
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterUserNotificationSettingsNotification object:application userInfo:settings ? @{UIApplicationUserNotificationSettingsKey : settings} : nil];
-            },
-            ^(NSObject *self, va_list arguments) {
-                id application = va_arg(arguments, id);
-                id deviceToken = va_arg(arguments, id);
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterForRemoteNotificationsNotification object:application userInfo:deviceToken ? @{UIApplicationDeviceTokenKey : deviceToken} : nil];
-            },
-            ^(NSObject *self, va_list arguments) {
-                id application = va_arg(arguments, id);
-                id error = va_arg(arguments, id);
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidFailToRegisterForRemoteNotificationsNotification object:application userInfo:error ? @{UIApplicationErrorKey : error} : nil];
-            },
-            ^(NSObject *self, va_list arguments) {
-                id application = va_arg(arguments, id);
-                id userinfo = va_arg(arguments, id);
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveRemoteNotification object:application userInfo:userinfo];
-            },
-            ^(NSObject *self, va_list arguments) {
-                id application = va_arg(arguments, id);
-                id localNotification = va_arg(arguments, id);
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveLocalNotification object:application userInfo:localNotification ? @{UIApplicationLocalNotificationKey : localNotification} : nil];
-            },
-            ^(NSObject *self, va_list arguments) {
-                id application = va_arg(arguments, id);
-                id url = va_arg(arguments, id);
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleOpenURLNotification object:application userInfo:url ? @{UIApplicationLaunchOptionsURLKey : url} : nil];
-            },
-            ^(NSObject *self, va_list arguments) {
-                id application = va_arg(arguments, id);
-                id url = va_arg(arguments, id);
-                id sourceApplication = va_arg(arguments, id);
-                id annotation = va_arg(arguments, id);
-                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (url)
-                {
-                    [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
-                }
-                if (sourceApplication)
-                {
-                    [userinfo setObject:sourceApplication forKey:UIApplicationOpenURLOptionsSourceApplicationKey];
-                }
-                if (annotation)
-                {
-                    [userinfo setObject:annotation forKey:UIApplicationOpenURLOptionsAnnotationKey];
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithSourceApplicationNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
-            },
-            ^(NSObject *self, va_list arguments) {
-                id application = va_arg(arguments, id);
-                id url = va_arg(arguments, id);
-                id options = va_arg(arguments, id);
-                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (url)
-                {
-                    [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
-                }
-                if (options)
-                {
-                    [userinfo setObject:options forKey:UIApplicationURLOptionsKey];
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithOptionsNotification object:application userInfo:userinfo];
-            },
-            ^(NSObject *self, va_list arguments) {
-                id application = va_arg(arguments, id);
-                id userActivity = va_arg(arguments, id);
-                id restorationHandler = va_arg(arguments, id);
-                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (userActivity)
-                {
-                    [userinfo setObject:userActivity forKey:UIApplicationContinueUserActivityKey];
-                }
-                if (restorationHandler)
-                {
-                    [userinfo setObject:restorationHandler forKey:UIApplicationRestorationHandlerKey];
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationContinueUserActivityNotification object:application userInfo:userinfo];
-            },
-            ^(NSObject *self, va_list arguments) {
-                id application = va_arg(arguments, id);
-                id item = va_arg(arguments, id);
-                id handler = va_arg(arguments, id);
-                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (item)
-                {
-                    [userinfo setObject:item forKey:UIApplicationShortcutItemKey];
-                }
-                if (handler)
-                {
-                    [userinfo setObject:handler forKey:UIApplicationCompletionHandlerKey];
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationPerformActionForShortcutItemNotification object:application userInfo:userinfo];
-            },
-            ^(NSObject *self, va_list arguments) {
-                id application = va_arg(arguments, id);
-                id userInfo = va_arg(arguments, id);
-                id reply = va_arg(arguments, id);
-                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (userInfo)
-                {
-                    [userinfo setObject:userInfo forKey:UIApplicationWatchKitExtensionRequestUserInfoKey];
-                }
-                if (reply)
-                {
-                    [userinfo setObject:reply forKey:UIApplicationWatchKitExtensionReplyKey];
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification object:application userInfo:userinfo];
-            },
-        };
+            id blocks[] = {
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id settings = va_arg(arguments, id);
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterUserNotificationSettingsNotification object:application userInfo:settings ? @{UIApplicationUserNotificationSettingsKey : settings} : nil];
+                },
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id deviceToken = va_arg(arguments, id);
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterForRemoteNotificationsNotification object:application userInfo:deviceToken ? @{UIApplicationDeviceTokenKey : deviceToken} : nil];
+                },
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id error = va_arg(arguments, id);
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidFailToRegisterForRemoteNotificationsNotification object:application userInfo:error ? @{UIApplicationErrorKey : error} : nil];
+                },
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id userinfo = va_arg(arguments, id);
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveRemoteNotification object:application userInfo:userinfo];
+                },
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id localNotification = va_arg(arguments, id);
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveLocalNotification object:application userInfo:localNotification ? @{UIApplicationLocalNotificationKey : localNotification} : nil];
+                },
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id url = va_arg(arguments, id);
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleOpenURLNotification object:application userInfo:url ? @{UIApplicationLaunchOptionsURLKey : url} : nil];
+                },
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id url = va_arg(arguments, id);
+                    id sourceApplication = va_arg(arguments, id);
+                    id annotation = va_arg(arguments, id);
+                    NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+                    if (url)
+                    {
+                        [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
+                    }
+                    if (sourceApplication)
+                    {
+                        [userinfo setObject:sourceApplication forKey:UIApplicationOpenURLOptionsSourceApplicationKey];
+                    }
+                    if (annotation)
+                    {
+                        [userinfo setObject:annotation forKey:UIApplicationOpenURLOptionsAnnotationKey];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithSourceApplicationNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
+                },
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id url = va_arg(arguments, id);
+                    id options = va_arg(arguments, id);
+                    NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+                    if (url)
+                    {
+                        [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
+                    }
+                    if (options)
+                    {
+                        [userinfo setObject:options forKey:UIApplicationURLOptionsKey];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithOptionsNotification object:application userInfo:userinfo];
+                },
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id userActivity = va_arg(arguments, id);
+                    id restorationHandler = va_arg(arguments, id);
+                    NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+                    if (userActivity)
+                    {
+                        [userinfo setObject:userActivity forKey:UIApplicationContinueUserActivityKey];
+                    }
+                    if (restorationHandler)
+                    {
+                        [userinfo setObject:restorationHandler forKey:UIApplicationRestorationHandlerKey];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationContinueUserActivityNotification object:application userInfo:userinfo];
+                },
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id item = va_arg(arguments, id);
+                    id handler = va_arg(arguments, id);
+                    NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+                    if (item)
+                    {
+                        [userinfo setObject:item forKey:UIApplicationShortcutItemKey];
+                    }
+                    if (handler)
+                    {
+                        [userinfo setObject:handler forKey:UIApplicationCompletionHandlerKey];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationPerformActionForShortcutItemNotification object:application userInfo:userinfo];
+                },
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id userInfo = va_arg(arguments, id);
+                    id reply = va_arg(arguments, id);
+                    NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+                    if (userInfo)
+                    {
+                        [userinfo setObject:userInfo forKey:UIApplicationWatchKitExtensionRequestUserInfoKey];
+                    }
+                    if (reply)
+                    {
+                        [userinfo setObject:reply forKey:UIApplicationWatchKitExtensionReplyKey];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification object:application userInfo:userinfo];
+                },
+            };
 #pragma clang diagnostic pop
-
-        
-        for (NSUInteger index = 0; index < sizeof(selectors) / sizeof(SEL); ++index) {
-            SEL originalSelector = selectors[index];
-            SEL swizzledSelector = prefixedSelector(originalSelector);
-            ADEXTPostNotificationBlock postNotificationBlock = blocks[index];
-            __block BOOL addSucceed;
             
-            IMP swizzledImplementation = imp_implementationWithBlock(^BOOL(NSObject *self, ...) {
+            
+            for (NSUInteger index = 0; index < sizeof(selectors) / sizeof(SEL); ++index) {
+                SEL originalSelector = selectors[index];
+                SEL swizzledSelector = prefixedSelector(originalSelector);
+                ADEXTPostNotificationBlock postNotificationBlock = blocks[index];
+                __block BOOL addSucceed;
                 
-                NSMethodSignature  *signature = [clazz instanceMethodSignatureForSelector:originalSelector];
-                NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-                invocation.target = self;
-                invocation.selector = swizzledSelector;
-                va_list arguments;
-                va_start(arguments, self);
-                [invocation adext_setArgumentsFromArgumentList:arguments];
-                va_end(arguments);
-                id returnValue;
-                const char *returnType = signature.methodReturnType;
+                IMP swizzledImplementation = imp_implementationWithBlock(^BOOL(NSObject *self, ...) {
+                    
+                    NSMethodSignature  *signature = [clazz instanceMethodSignatureForSelector:originalSelector];
+                    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+                    invocation.target = self;
+                    invocation.selector = swizzledSelector;
+                    va_list arguments;
+                    va_start(arguments, self);
+                    [invocation adext_setArgumentsFromArgumentList:arguments];
+                    va_end(arguments);
+                    id returnValue;
+                    const char *returnType = signature.methodReturnType;
+                    if (!addSucceed)
+                    {
+                        [invocation invoke];
+                        
+                        if( !strcmp(returnType, @encode(void)))
+                        {
+                            returnValue =  nil;
+                        }
+                        else if( !strcmp(returnType, @encode(id)))
+                        {
+                            [invocation getReturnValue:&returnValue];
+                        }
+                        else
+                        {
+                            NSUInteger length = [signature methodReturnLength];
+                            void *buffer = (void *)malloc(length);
+                            [invocation getReturnValue:buffer];
+                            returnValue = [NSValue valueWithBytes:buffer objCType:returnType];
+                        }
+                    }
+                    else
+                    {
+                        if( !strcmp(returnType, @encode(BOOL)) )
+                        {
+                            returnValue = [NSValue valueWithBytes:"\1" objCType:returnType];
+                        }
+                        else
+                        {
+                            returnValue =  nil;
+                        }
+                    }
+                    
+                    va_start(arguments, self);
+                    postNotificationBlock(self, arguments);
+                    va_end(arguments);
+                    return returnValue;
+                });
+                
+                addSucceed = addMethodWithIMP(clazz, originalSelector, swizzledSelector, swizzledImplementation, "v@:@", YES);
                 if (!addSucceed)
                 {
-                    [invocation invoke];
-                    
-                    if( !strcmp(returnType, @encode(void)))
-                    {
-                        returnValue =  nil;
-                    }
-                    else if( !strcmp(returnType, @encode(id)))
-                    {
-                        [invocation getReturnValue:&returnValue];
-                    }
-                    else
-                    {
-                        NSUInteger length = [signature methodReturnLength];
-                        void *buffer = (void *)malloc(length);
-                        [invocation getReturnValue:buffer];
-                        returnValue = [NSValue valueWithBytes:buffer objCType:returnType];
-                    }
+                    swizzleWithIMP(clazz, originalSelector, swizzledSelector, swizzledImplementation, "v@:@", YES);
                 }
-                else
-                {
-                    if( !strcmp(returnType, @encode(BOOL)) )
-                    {
-                        returnValue = [NSValue valueWithBytes:"\1" objCType:returnType];
-                    }
-                    else
-                    {
-                        returnValue =  nil;
-                    }
-                }
-          
-                va_start(arguments, self);
-                postNotificationBlock(self, arguments);
-                va_end(arguments);
-                return returnValue;
-            });
-            
-            addSucceed = addMethodWithIMP(clazz, originalSelector, swizzledSelector, swizzledImplementation, "v@:@", YES);
-            if (!addSucceed)
-            {
-                swizzleWithIMP(clazz, originalSelector, swizzledSelector, swizzledImplementation, "v@:@", YES);
             }
         }
+        
     });
 }
 
