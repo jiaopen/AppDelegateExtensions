@@ -13,7 +13,6 @@
 添加了以下这些Notification key
 
 ```objc
-UIKIT_EXTERN NSNotificationName const UIApplicationWillFinishLaunchingNotification;
 UIKIT_EXTERN NSNotificationName const UIApplicationDidRegisterUserNotificationSettingsNotification;
 UIKIT_EXTERN NSNotificationName const UIApplicationDidRegisterForRemoteNotificationsNotification;
 UIKIT_EXTERN NSNotificationName const UIApplicationDidFailToRegisterForRemoteNotificationsNotification;
