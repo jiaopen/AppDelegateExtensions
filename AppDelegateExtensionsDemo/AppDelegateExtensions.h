@@ -50,6 +50,8 @@ UIKIT_EXTERN NSString *const UIApplicationShortcutItemKey;
 UIKIT_EXTERN NSString *const UIApplicationCompletionHandlerKey;
 UIKIT_EXTERN NSString *const UIApplicationWatchKitExtensionRequestUserInfoKey;
 UIKIT_EXTERN NSString *const UIApplicationWatchKitExtensionReplyKey;
+UIKIT_EXTERN NSString *const UIApplicationRemoteNoficationUserInfoKey;
+UIKIT_EXTERN NSString *const UIApplicationFetchCompletionHandlerKey;
 
 
 void installAppDelegateExtensionsWithClass(Class clazz);

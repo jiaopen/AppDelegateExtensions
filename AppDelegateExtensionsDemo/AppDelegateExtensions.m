@@ -52,6 +52,8 @@ NSString *const UIApplicationShortcutItemKey = @"UIApplicationShortcutItemKey";
 NSString *const UIApplicationCompletionHandlerKey = @"UIApplicationCompletionHandlerKey";
 NSString *const UIApplicationWatchKitExtensionRequestUserInfoKey = @"UIApplicationWatchKitExtensionRequestUserInfoKey";
 NSString *const UIApplicationWatchKitExtensionReplyKey = @"UIApplicationWatchKitExtensionReplyKey";
+NSString *const UIApplicationRemoteNoficationUserInfoKey = @"UIApplicationRemoteNoficationUserInfoKey";
+NSString *const UIApplicationFetchCompletionHandlerKey = @"UIApplicationFetchCompletionHandlerKey";
 
 static inline BOOL isValidIMP(IMP impl)
 {
@@ -493,6 +495,7 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:),
                 @selector(application:didFailToRegisterForRemoteNotificationsWithError:),
                 @selector(application:didReceiveRemoteNotification:),
+                @selector(application:didReceiveRemoteNotification:fetchCompletionHandler:),
                 @selector(application:didReceiveLocalNotification:),
                 @selector(application:handleOpenURL:),
                 @selector(application:openURL:sourceApplication:annotation:),
@@ -527,8 +530,28 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 },
                 ^(NSObject *self, va_list arguments) {
                     id application = va_arg(arguments, id);
-                    id userinfo = va_arg(arguments, id);
-                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveRemoteNotification object:application userInfo:userinfo];
+                    id remoteNotificationUserInfo = va_arg(arguments, id);
+                    NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+                    if (remoteNotificationUserInfo)
+                    {
+                        [userinfo setObject:remoteNotificationUserInfo forKey:UIApplicationRemoteNoficationUserInfoKey];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveRemoteNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
+                },
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id remoteNotificationUserInfo = va_arg(arguments, id);
+                    id fetchCompletionHandler = va_arg(arguments, id);
+                    NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+                    if (remoteNotificationUserInfo)
+                    {
+                        [userinfo setObject:remoteNotificationUserInfo forKey:UIApplicationRemoteNoficationUserInfoKey];
+                    }
+                    if (fetchCompletionHandler)
+                    {
+                        [userinfo setObject:fetchCompletionHandler forKey:UIApplicationFetchCompletionHandlerKey];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveRemoteNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
                 },
                 ^(NSObject *self, va_list arguments) {
                     id application = va_arg(arguments, id);
