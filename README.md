@@ -13,7 +13,6 @@
 添加了以下这些Notification key
 
 ```objc
-UIKIT_EXTERN NSNotificationName const UIApplicationWillFinishLaunchingNotification;
 UIKIT_EXTERN NSNotificationName const UIApplicationDidRegisterUserNotificationSettingsNotification;
 UIKIT_EXTERN NSNotificationName const UIApplicationDidRegisterForRemoteNotificationsNotification;
 UIKIT_EXTERN NSNotificationName const UIApplicationDidFailToRegisterForRemoteNotificationsNotification;
@@ -27,7 +26,7 @@ UIKIT_EXTERN NSNotificationName const UIApplicationPerformActionForShortcutItemN
 UIKIT_EXTERN NSNotificationName const UIApplicationHandleWatchKitExtensionRequestNotification;
 ```
 
-#####Features:
+### Features:
 - AOP没有使用category来实现methodswizzle，因为不是所有工程的`AppDelegate`起名相同，因此需要在`load`中显式调用一行注册代码。
 - 增加了常用的`UIApplicationDelegate`方法对应的通知，可以根据自已业务的情况补充。
 
