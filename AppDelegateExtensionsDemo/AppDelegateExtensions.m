@@ -488,6 +488,7 @@ void installAppDelegateExtensionsWithClass(Class clazz)
     dispatch_once(&onceToken, ^{
         @autoreleasepool {
             SEL selectors[] = {
+                @selector(application:willFinishLaunchingWithOptions:),
                 @selector(application:didRegisterUserNotificationSettings:),
                 @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:),
                 @selector(application:didFailToRegisterForRemoteNotificationsWithError:),
@@ -504,6 +505,11 @@ void installAppDelegateExtensionsWithClass(Class clazz)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
             id blocks[] = {
+                ^(NSObject *self, va_list arguments) {
+                    id application = va_arg(arguments, id);
+                    id options = va_arg(arguments, id);
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillFinishLaunchingNotification object:application userInfo:options];
+                },
                 ^(NSObject *self, va_list arguments) {
                     id application = va_arg(arguments, id);
                     id settings = va_arg(arguments, id);
