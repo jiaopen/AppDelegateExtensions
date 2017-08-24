@@ -71,7 +71,7 @@ static BOOL addMethodWithIMP(Class cls, SEL oldSel, SEL newSel, IMP newIMP, cons
     {
         return NO;
     }
-
+    
     IMP parentIMP = NULL;
     Class superclass = class_getSuperclass(cls);
     while (superclass && !isValidIMP(parentIMP))
@@ -561,7 +561,7 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 ^(NSObject *self, va_list arguments) {
                     id application = va_arg(arguments, id);
                     id url = va_arg(arguments, id);
-                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleOpenURLNotification object:application userInfo:url ? @{UIApplicationLaunchOptionsURLKey : url} : nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleOpenURLNotification object:application userInfo:url ? @{UIApplicationOpenURLOptionsURLKey : url} : nil];
                 },
                 ^(NSObject *self, va_list arguments) {
                     id application = va_arg(arguments, id);
