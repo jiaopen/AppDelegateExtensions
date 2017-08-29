@@ -272,7 +272,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationWillFinishLaunchingNotification].addSucceed;
                 id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillFinishLaunchingNotification object:application userInfo:options];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationWillFinishLaunchingNotification];
                 return returnValue;
             }];
             
@@ -283,7 +282,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationDidRegisterUserNotificationSettingsNotification].addSucceed;
                 id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterUserNotificationSettingsNotification object:application userInfo:settings ? @{UIApplicationUserNotificationSettingsKey : settings} : nil];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationDidRegisterUserNotificationSettingsNotification];
                 return returnValue;
             }];
             
@@ -294,7 +292,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationDidRegisterForRemoteNotificationsNotification].addSucceed;
                 id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterForRemoteNotificationsNotification object:application userInfo:deviceToken ? @{UIApplicationDeviceTokenKey : deviceToken} : nil];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationDidRegisterForRemoteNotificationsNotification];
                 return returnValue;
             }];
             
@@ -305,7 +302,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationDidFailToRegisterForRemoteNotificationsNotification].addSucceed;
                 id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidFailToRegisterForRemoteNotificationsNotification object:application userInfo:error ? @{UIApplicationErrorKey : error} : nil];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationDidFailToRegisterForRemoteNotificationsNotification];
                 return returnValue;
             }];
             
@@ -321,7 +317,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                     [userinfo setObject:remoteNotificationUserInfo forKey:UIApplicationRemoteNoficationUserInfoKey];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveRemoteNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationDidReceiveRemoteNotification];
                 return returnValue;
             }];
             
@@ -342,7 +337,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                     [userinfo setObject:fetchCompletionHandler forKey:UIApplicationFetchCompletionHandlerKey];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification];
                 return returnValue;
             }];
             
@@ -353,7 +347,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationDidReceiveLocalNotification].addSucceed;
                 id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveLocalNotification object:application userInfo:localNotification ? @{UIApplicationLocalNotificationKey : localNotification} : nil];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationDidReceiveLocalNotification];
                 return returnValue;
             }];
             
@@ -364,7 +357,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationHandleOpenURLNotification].addSucceed;
                 id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleOpenURLNotification object:application userInfo:url ? @{UIApplicationOpenURLOptionsURLKey : url} : nil];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationHandleOpenURLNotification];
                 return returnValue;
             }];
             
@@ -390,7 +382,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                     [userinfo setObject:annotation forKey:UIApplicationOpenURLOptionsAnnotationKey];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithSourceApplicationNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationOpenURLWithSourceApplicationNotification];
                 return returnValue;
             }];
             
@@ -411,7 +402,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                     [userinfo setObject:options forKey:UIApplicationURLOptionsKey];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithOptionsNotification object:application userInfo:userinfo];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationOpenURLWithOptionsNotification];
                 return returnValue;
             }];
             
@@ -432,7 +422,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                     [userinfo setObject:restorationHandler forKey:UIApplicationRestorationHandlerKey];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationContinueUserActivityNotification object:application userInfo:userinfo];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationContinueUserActivityNotification];
                 return returnValue;
             }];
             
@@ -453,7 +442,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                     [userinfo setObject:handler forKey:UIApplicationCompletionHandlerKey];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationPerformActionForShortcutItemNotification object:application userInfo:userinfo];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationPerformActionForShortcutItemNotification];
                 return returnValue;
             }];
             
@@ -474,7 +462,6 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                     [userinfo setObject:reply forKey:UIApplicationWatchKitExtensionReplyKey];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification object:application userInfo:userinfo];
-                [[AppDelegateExtension extensions] removeObjectForKey:UIApplicationHandleWatchKitExtensionRequestNotification];
                 return returnValue;
             }];
         }
