@@ -349,61 +349,65 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveLocalNotification object:application userInfo:localNotification ? @{UIApplicationLocalNotificationKey : localNotification} : nil];
                 return returnValue;
             }];
-            
-            [AppDelegateExtension installWithNotificationName:UIApplicationHandleOpenURLNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationHandleOpenURLNotification clazz:clazz target:self];
-                [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&url atIndex:3];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationHandleOpenURLNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleOpenURLNotification object:application userInfo:url ? @{UIApplicationOpenURLOptionsURLKey : url} : nil];
-                return returnValue;
-            }];
-            
-            [AppDelegateExtension installWithNotificationName:UIApplicationOpenURLWithSourceApplicationNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url, id sourceApplication, id annotation) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationOpenURLWithSourceApplicationNotification clazz:clazz target:self];
-                [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&url atIndex:3];
-                [invocation setArgument:&sourceApplication atIndex:4];
-                [invocation setArgument:&annotation atIndex:5];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationOpenURLWithSourceApplicationNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
-                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (url)
-                {
-                    [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
-                }
-                if (sourceApplication)
-                {
-                    [userinfo setObject:sourceApplication forKey:UIApplicationOpenURLOptionsSourceApplicationKey];
-                }
-                if (annotation)
-                {
-                    [userinfo setObject:annotation forKey:UIApplicationOpenURLOptionsAnnotationKey];
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithSourceApplicationNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
-                return returnValue;
-            }];
-            
-            [AppDelegateExtension installWithNotificationName:UIApplicationOpenURLWithOptionsNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url, id options) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationOpenURLWithOptionsNotification clazz:clazz target:self];
-                [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&url atIndex:3];
-                [invocation setArgument:&options atIndex:4];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationOpenURLWithOptionsNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
-                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (url)
-                {
-                    [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
-                }
-                if (options)
-                {
-                    [userinfo setObject:options forKey:UIApplicationURLOptionsKey];
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithOptionsNotification object:application userInfo:userinfo];
-                return returnValue;
-            }];
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0)
+            {
+                [AppDelegateExtension installWithNotificationName:UIApplicationOpenURLWithOptionsNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url, id options) {
+                    NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationOpenURLWithOptionsNotification clazz:clazz target:self];
+                    [invocation setArgument:&application atIndex:2];
+                    [invocation setArgument:&url atIndex:3];
+                    [invocation setArgument:&options atIndex:4];
+                    BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationOpenURLWithOptionsNotification].addSucceed;
+                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                    NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+                    if (url)
+                    {
+                        [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
+                    }
+                    if (options)
+                    {
+                        [userinfo setObject:options forKey:UIApplicationURLOptionsKey];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithOptionsNotification object:application userInfo:userinfo];
+                    return returnValue;
+                }];
+            }
+            else
+            {
+                [AppDelegateExtension installWithNotificationName:UIApplicationHandleOpenURLNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url) {
+                    NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationHandleOpenURLNotification clazz:clazz target:self];
+                    [invocation setArgument:&application atIndex:2];
+                    [invocation setArgument:&url atIndex:3];
+                    BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationHandleOpenURLNotification].addSucceed;
+                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleOpenURLNotification object:application userInfo:url ? @{UIApplicationOpenURLOptionsURLKey : url} : nil];
+                    return returnValue;
+                }];
+                
+                [AppDelegateExtension installWithNotificationName:UIApplicationOpenURLWithSourceApplicationNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url, id sourceApplication, id annotation) {
+                    NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationOpenURLWithSourceApplicationNotification clazz:clazz target:self];
+                    [invocation setArgument:&application atIndex:2];
+                    [invocation setArgument:&url atIndex:3];
+                    [invocation setArgument:&sourceApplication atIndex:4];
+                    [invocation setArgument:&annotation atIndex:5];
+                    BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationOpenURLWithSourceApplicationNotification].addSucceed;
+                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                    NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+                    if (url)
+                    {
+                        [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
+                    }
+                    if (sourceApplication)
+                    {
+                        [userinfo setObject:sourceApplication forKey:UIApplicationOpenURLOptionsSourceApplicationKey];
+                    }
+                    if (annotation)
+                    {
+                        [userinfo setObject:annotation forKey:UIApplicationOpenURLOptionsAnnotationKey];
+                    }
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithSourceApplicationNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
+                    return returnValue;
+                }];
+            }
             
             [AppDelegateExtension installWithNotificationName:UIApplicationContinueUserActivityNotification clazz:clazz block:^BOOL(NSObject *self, id application, id userActivity, id restorationHandler) {
                 NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationContinueUserActivityNotification clazz:clazz target:self];
