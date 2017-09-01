@@ -23,7 +23,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self application:application didReceiveLocalNotification:nil];
+        id aa = application;
+        [self application:application openURL:aa sourceApplication:aa annotation:aa];
     });
     return YES;
 }

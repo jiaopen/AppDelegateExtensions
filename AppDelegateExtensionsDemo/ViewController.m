@@ -20,7 +20,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handle:) name:UIApplicationDidFinishLaunchingNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handle:) name:UIApplicationDidReceiveLocalNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handle:) name:UIApplicationOpenURLWithSourceApplicationNotification object:nil];
 }
 
 

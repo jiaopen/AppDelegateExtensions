@@ -55,6 +55,8 @@ NSString *const UIApplicationWatchKitExtensionRequestUserInfoKey = @"UIApplicati
 NSString *const UIApplicationWatchKitExtensionReplyKey = @"UIApplicationWatchKitExtensionReplyKey";
 NSString *const UIApplicationRemoteNoficationUserInfoKey = @"UIApplicationRemoteNoficationUserInfoKey";
 NSString *const UIApplicationFetchCompletionHandlerKey = @"UIApplicationFetchCompletionHandlerKey";
+UIApplicationOpenURLOptionsKey const UIApplicationOpenURLOptionsSourceApplicationKey = @"UIApplicationOpenURLOptionsAnnotationKey";
+UIApplicationOpenURLOptionsKey const UIApplicationOpenURLOptionsAnnotationKey = @"UIApplicationOpenURLOptionsAnnotationKey";
 
 static inline BOOL isValidIMP(IMP impl)
 {
