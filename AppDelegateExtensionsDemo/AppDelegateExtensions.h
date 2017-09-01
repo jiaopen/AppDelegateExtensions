@@ -25,6 +25,8 @@
 
 #import <UIKit/UIKit.h>
 
+
+
 UIKIT_EXTERN NSNotificationName const UIApplicationWillFinishLaunchingNotification;
 UIKIT_EXTERN NSNotificationName const UIApplicationDidRegisterUserNotificationSettingsNotification;
 UIKIT_EXTERN NSNotificationName const UIApplicationDidRegisterForRemoteNotificationsNotification;
@@ -54,5 +56,9 @@ UIKIT_EXTERN NSString *const UIApplicationWatchKitExtensionReplyKey;
 UIKIT_EXTERN NSString *const UIApplicationRemoteNoficationUserInfoKey;
 UIKIT_EXTERN NSString *const UIApplicationFetchCompletionHandlerKey;
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_9_0
+UIApplicationOpenURLOptionsKey const UIApplicationOpenURLOptionsSourceApplicationKey;
+UIApplicationOpenURLOptionsKey const UIApplicationOpenURLOptionsAnnotationKey;
+#endif
 
 void installAppDelegateExtensionsWithClass(Class clazz);
