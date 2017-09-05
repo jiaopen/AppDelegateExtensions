@@ -226,7 +226,7 @@ typedef void (^ADEXTPostNotificationBlock)(NSObject *self, va_list arguments);
 
 @interface AppDelegateExtension : NSObject
 
-@property (nonatomic, assign) BOOL addSucceed;
+@property (nonatomic, assign) BOOL addSucceeded;
 
 @end
 
@@ -249,8 +249,8 @@ typedef void (^ADEXTPostNotificationBlock)(NSObject *self, va_list arguments);
     SEL swizzledSelector = prefixedSelector(originalSelector);
     
     IMP swizzledImplementation = imp_implementationWithBlock(block);
-    extension.addSucceed = addMethodWithIMP(clazz, originalSelector, swizzledSelector, swizzledImplementation, "v@:@", YES);
-    if (!extension.addSucceed)
+    extension.addSucceeded = addMethodWithIMP(clazz, originalSelector, swizzledSelector, swizzledImplementation, "v@:@", YES);
+    if (!extension.addSucceeded)
     {
         swizzleWithIMP(clazz, originalSelector, swizzledSelector, swizzledImplementation, "v@:@", YES);
     }
@@ -271,8 +271,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationWillFinishLaunchingNotification clazz:clazz target:self];
                 [invocation setArgument:&application atIndex:2];
                 [invocation setArgument:&options atIndex:3];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationWillFinishLaunchingNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationWillFinishLaunchingNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillFinishLaunchingNotification object:application userInfo:options];
                 return returnValue;
             }];
@@ -281,8 +281,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidRegisterUserNotificationSettingsNotification clazz:clazz target:self];
                 [invocation setArgument:&application atIndex:2];
                 [invocation setArgument:&settings atIndex:3];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationDidRegisterUserNotificationSettingsNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidRegisterUserNotificationSettingsNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterUserNotificationSettingsNotification object:application userInfo:settings ? @{UIApplicationUserNotificationSettingsKey : settings} : nil];
                 return returnValue;
             }];
@@ -291,8 +291,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidRegisterForRemoteNotificationsNotification clazz:clazz target:self];
                 [invocation setArgument:&application atIndex:2];
                 [invocation setArgument:&deviceToken atIndex:3];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationDidRegisterForRemoteNotificationsNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidRegisterForRemoteNotificationsNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterForRemoteNotificationsNotification object:application userInfo:deviceToken ? @{UIApplicationDeviceTokenKey : deviceToken} : nil];
                 return returnValue;
             }];
@@ -301,8 +301,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidFailToRegisterForRemoteNotificationsNotification clazz:clazz target:self];
                 [invocation setArgument:&application atIndex:2];
                 [invocation setArgument:&error atIndex:3];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationDidFailToRegisterForRemoteNotificationsNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidFailToRegisterForRemoteNotificationsNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidFailToRegisterForRemoteNotificationsNotification object:application userInfo:error ? @{UIApplicationErrorKey : error} : nil];
                 return returnValue;
             }];
@@ -311,8 +311,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidReceiveRemoteNotification clazz:clazz target:self];
                 [invocation setArgument:&application atIndex:2];
                 [invocation setArgument:&remoteNotificationUserInfo atIndex:3];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationDidReceiveRemoteNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidReceiveRemoteNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
                 if (remoteNotificationUserInfo)
                 {
@@ -327,8 +327,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 [invocation setArgument:&application atIndex:2];
                 [invocation setArgument:&remoteNotificationUserInfo atIndex:3];
                 [invocation setArgument:&fetchCompletionHandler atIndex:4];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
                 if (remoteNotificationUserInfo)
                 {
@@ -346,8 +346,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidReceiveLocalNotification clazz:clazz target:self];
                 [invocation setArgument:&application atIndex:2];
                 [invocation setArgument:&localNotification atIndex:3];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationDidReceiveLocalNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidReceiveLocalNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveLocalNotification object:application userInfo:localNotification ? @{UIApplicationLocalNotificationKey : localNotification} : nil];
                 return returnValue;
             }];
@@ -358,8 +358,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                     [invocation setArgument:&application atIndex:2];
                     [invocation setArgument:&url atIndex:3];
                     [invocation setArgument:&options atIndex:4];
-                    BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationOpenURLWithOptionsNotification].addSucceed;
-                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                    BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationOpenURLWithOptionsNotification].addSucceeded;
+                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                     NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
                     if (url)
                     {
@@ -379,8 +379,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                     NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationHandleOpenURLNotification clazz:clazz target:self];
                     [invocation setArgument:&application atIndex:2];
                     [invocation setArgument:&url atIndex:3];
-                    BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationHandleOpenURLNotification].addSucceed;
-                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                    BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationHandleOpenURLNotification].addSucceeded;
+                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleOpenURLNotification object:application userInfo:url ? @{UIApplicationOpenURLOptionsURLKey : url} : nil];
                     return returnValue;
                 }];
@@ -391,8 +391,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                     [invocation setArgument:&url atIndex:3];
                     [invocation setArgument:&sourceApplication atIndex:4];
                     [invocation setArgument:&annotation atIndex:5];
-                    BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationOpenURLWithSourceApplicationNotification].addSucceed;
-                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                    BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationOpenURLWithSourceApplicationNotification].addSucceeded;
+                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                     NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
                     if (url)
                     {
@@ -416,8 +416,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 [invocation setArgument:&application atIndex:2];
                 [invocation setArgument:&userActivity atIndex:3];
                 [invocation setArgument:&restorationHandler atIndex:4];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationContinueUserActivityNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationContinueUserActivityNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
                 if (userActivity)
                 {
@@ -436,8 +436,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 [invocation setArgument:&application atIndex:2];
                 [invocation setArgument:&item atIndex:3];
                 [invocation setArgument:&handler atIndex:4];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationPerformActionForShortcutItemNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationPerformActionForShortcutItemNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
                 if (item)
                 {
@@ -456,8 +456,8 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 [invocation setArgument:&application atIndex:2];
                 [invocation setArgument:&userInfo atIndex:3];
                 [invocation setArgument:&reply atIndex:4];
-                BOOL addSucceed = [AppDelegateExtension extensions][UIApplicationHandleWatchKitExtensionRequestNotification].addSucceed;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceed];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationHandleWatchKitExtensionRequestNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
                 if (userInfo)
                 {
