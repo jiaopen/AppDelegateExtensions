@@ -144,6 +144,8 @@ static inline SEL prefixedSelector(SEL original) {
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wint-conversion"
+
 @implementation NSDictionary (AppDelegateExtensions)
 
 + (NSDictionary<NSNotificationName, NSString *> *)adext_selectors
@@ -369,7 +371,7 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                     {
                         [userinfo setObject:options forKey:UIApplicationURLOptionsKey];
                     }
-                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithOptionsNotification object:application userInfo:userinfo];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithOptionsNotification object:application userInfo:[userinfo copy]];
                     return returnValue;
                 }];
             }
@@ -427,7 +429,7 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 {
                     [userinfo setObject:restorationHandler forKey:UIApplicationRestorationHandlerKey];
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationContinueUserActivityNotification object:application userInfo:userinfo];
+                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationContinueUserActivityNotification object:application userInfo:[userinfo copy]];
                 return returnValue;
             }];
             
@@ -447,7 +449,7 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 {
                     [userinfo setObject:handler forKey:UIApplicationCompletionHandlerKey];
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationPerformActionForShortcutItemNotification object:application userInfo:userinfo];
+                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationPerformActionForShortcutItemNotification object:application userInfo:[userinfo copy]];
                 return returnValue;
             }];
             
@@ -467,7 +469,7 @@ void installAppDelegateExtensionsWithClass(Class clazz)
                 {
                     [userinfo setObject:reply forKey:UIApplicationWatchKitExtensionReplyKey];
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification object:application userInfo:userinfo];
+                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification object:application userInfo:[userinfo copy]];
                 return returnValue;
             }];
         }
