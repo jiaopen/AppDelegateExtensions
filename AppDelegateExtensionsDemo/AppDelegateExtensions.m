@@ -268,212 +268,209 @@ void installAppDelegateExtensionsWithClass(Class clazz)
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        @autoreleasepool {
-            [AppDelegateExtension installWithNotificationName:UIApplicationWillFinishLaunchingNotification clazz:clazz block:^BOOL(NSObject *self, id application, id options) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationWillFinishLaunchingNotification clazz:clazz target:self];
-                [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&options atIndex:3];
-                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationWillFinishLaunchingNotification].addSucceeded;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillFinishLaunchingNotification object:application userInfo:options];
-                return returnValue;
-            }];
-            
-            [AppDelegateExtension installWithNotificationName:UIApplicationDidRegisterUserNotificationSettingsNotification clazz:clazz block:^BOOL(NSObject *self, id application, id settings) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidRegisterUserNotificationSettingsNotification clazz:clazz target:self];
-                [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&settings atIndex:3];
-                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidRegisterUserNotificationSettingsNotification].addSucceeded;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterUserNotificationSettingsNotification object:application userInfo:settings ? @{UIApplicationUserNotificationSettingsKey : settings} : nil];
-                return returnValue;
-            }];
-            
-            [AppDelegateExtension installWithNotificationName:UIApplicationDidRegisterForRemoteNotificationsNotification clazz:clazz block:^BOOL(NSObject *self, id application, id deviceToken) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidRegisterForRemoteNotificationsNotification clazz:clazz target:self];
-                [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&deviceToken atIndex:3];
-                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidRegisterForRemoteNotificationsNotification].addSucceeded;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterForRemoteNotificationsNotification object:application userInfo:deviceToken ? @{UIApplicationDeviceTokenKey : deviceToken} : nil];
-                return returnValue;
-            }];
-            
-            [AppDelegateExtension installWithNotificationName:UIApplicationDidFailToRegisterForRemoteNotificationsNotification clazz:clazz block:^BOOL(NSObject *self, id application, id error) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidFailToRegisterForRemoteNotificationsNotification clazz:clazz target:self];
-                [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&error atIndex:3];
-                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidFailToRegisterForRemoteNotificationsNotification].addSucceeded;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidFailToRegisterForRemoteNotificationsNotification object:application userInfo:error ? @{UIApplicationErrorKey : error} : nil];
-                return returnValue;
-            }];
-            
-            [AppDelegateExtension installWithNotificationName:UIApplicationDidReceiveRemoteNotification clazz:clazz block:^BOOL(NSObject *self, id application, id remoteNotificationUserInfo) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidReceiveRemoteNotification clazz:clazz target:self];
-                [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&remoteNotificationUserInfo atIndex:3];
-                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidReceiveRemoteNotification].addSucceeded;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (remoteNotificationUserInfo)
-                {
-                    [userinfo setObject:remoteNotificationUserInfo forKey:UIApplicationRemoteNoficationUserInfoKey];
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveRemoteNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
-                return returnValue;
-            }];
-            
-            [AppDelegateExtension installWithNotificationName:UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification clazz:clazz block:^BOOL(NSObject *self, id application, id remoteNotificationUserInfo, id fetchCompletionHandler) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification clazz:clazz target:self];
-                [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&remoteNotificationUserInfo atIndex:3];
-                [invocation setArgument:&fetchCompletionHandler atIndex:4];
-                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification].addSucceeded;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (remoteNotificationUserInfo)
-                {
-                    [userinfo setObject:remoteNotificationUserInfo forKey:UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification];
-                }
-                if (fetchCompletionHandler)
-                {
-                    [userinfo setObject:fetchCompletionHandler forKey:UIApplicationFetchCompletionHandlerKey];
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
-                return returnValue;
-            }];
-            
-            [AppDelegateExtension installWithNotificationName:UIApplicationDidReceiveLocalNotification clazz:clazz block:^BOOL(NSObject *self, id application, id localNotification) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidReceiveLocalNotification clazz:clazz target:self];
-                [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&localNotification atIndex:3];
-                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidReceiveLocalNotification].addSucceeded;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveLocalNotification object:application userInfo:localNotification ? @{UIApplicationLocalNotificationKey : localNotification} : nil];
-                return returnValue;
-            }];
-            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0)
+        [AppDelegateExtension installWithNotificationName:UIApplicationWillFinishLaunchingNotification clazz:clazz block:^BOOL(NSObject *self, id application, id options) {
+            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationWillFinishLaunchingNotification clazz:clazz target:self];
+            [invocation setArgument:&application atIndex:2];
+            [invocation setArgument:&options atIndex:3];
+            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationWillFinishLaunchingNotification].addSucceeded;
+            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillFinishLaunchingNotification object:application userInfo:options];
+            return returnValue;
+        }];
+        
+        [AppDelegateExtension installWithNotificationName:UIApplicationDidRegisterUserNotificationSettingsNotification clazz:clazz block:^BOOL(NSObject *self, id application, id settings) {
+            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidRegisterUserNotificationSettingsNotification clazz:clazz target:self];
+            [invocation setArgument:&application atIndex:2];
+            [invocation setArgument:&settings atIndex:3];
+            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidRegisterUserNotificationSettingsNotification].addSucceeded;
+            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterUserNotificationSettingsNotification object:application userInfo:settings ? @{UIApplicationUserNotificationSettingsKey : settings} : nil];
+            return returnValue;
+        }];
+        
+        [AppDelegateExtension installWithNotificationName:UIApplicationDidRegisterForRemoteNotificationsNotification clazz:clazz block:^BOOL(NSObject *self, id application, id deviceToken) {
+            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidRegisterForRemoteNotificationsNotification clazz:clazz target:self];
+            [invocation setArgument:&application atIndex:2];
+            [invocation setArgument:&deviceToken atIndex:3];
+            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidRegisterForRemoteNotificationsNotification].addSucceeded;
+            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidRegisterForRemoteNotificationsNotification object:application userInfo:deviceToken ? @{UIApplicationDeviceTokenKey : deviceToken} : nil];
+            return returnValue;
+        }];
+        
+        [AppDelegateExtension installWithNotificationName:UIApplicationDidFailToRegisterForRemoteNotificationsNotification clazz:clazz block:^BOOL(NSObject *self, id application, id error) {
+            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidFailToRegisterForRemoteNotificationsNotification clazz:clazz target:self];
+            [invocation setArgument:&application atIndex:2];
+            [invocation setArgument:&error atIndex:3];
+            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidFailToRegisterForRemoteNotificationsNotification].addSucceeded;
+            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidFailToRegisterForRemoteNotificationsNotification object:application userInfo:error ? @{UIApplicationErrorKey : error} : nil];
+            return returnValue;
+        }];
+        
+        [AppDelegateExtension installWithNotificationName:UIApplicationDidReceiveRemoteNotification clazz:clazz block:^BOOL(NSObject *self, id application, id remoteNotificationUserInfo) {
+            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidReceiveRemoteNotification clazz:clazz target:self];
+            [invocation setArgument:&application atIndex:2];
+            [invocation setArgument:&remoteNotificationUserInfo atIndex:3];
+            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidReceiveRemoteNotification].addSucceeded;
+            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+            NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+            if (remoteNotificationUserInfo)
             {
-                [AppDelegateExtension installWithNotificationName:UIApplicationOpenURLWithOptionsNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url, id options) {
-                    NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationOpenURLWithOptionsNotification clazz:clazz target:self];
-                    [invocation setArgument:&application atIndex:2];
-                    [invocation setArgument:&url atIndex:3];
-                    [invocation setArgument:&options atIndex:4];
-                    BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationOpenURLWithOptionsNotification].addSucceeded;
-                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-                    NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                    if (url)
-                    {
-                        [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
-                    }
-                    if (options)
-                    {
-                        [userinfo setObject:options forKey:UIApplicationURLOptionsKey];
-                    }
-                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithOptionsNotification object:application userInfo:[userinfo copy]];
-                    return returnValue;
-                }];
+                [userinfo setObject:remoteNotificationUserInfo forKey:UIApplicationRemoteNoficationUserInfoKey];
             }
-            else
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveRemoteNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
+            return returnValue;
+        }];
+        
+        [AppDelegateExtension installWithNotificationName:UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification clazz:clazz block:^BOOL(NSObject *self, id application, id remoteNotificationUserInfo, id fetchCompletionHandler) {
+            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification clazz:clazz target:self];
+            [invocation setArgument:&application atIndex:2];
+            [invocation setArgument:&remoteNotificationUserInfo atIndex:3];
+            [invocation setArgument:&fetchCompletionHandler atIndex:4];
+            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification].addSucceeded;
+            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+            NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+            if (remoteNotificationUserInfo)
             {
-                [AppDelegateExtension installWithNotificationName:UIApplicationHandleOpenURLNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url) {
-                    NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationHandleOpenURLNotification clazz:clazz target:self];
-                    [invocation setArgument:&application atIndex:2];
-                    [invocation setArgument:&url atIndex:3];
-                    BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationHandleOpenURLNotification].addSucceeded;
-                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleOpenURLNotification object:application userInfo:url ? @{UIApplicationOpenURLOptionsURLKey : url} : nil];
-                    return returnValue;
-                }];
-                
-                [AppDelegateExtension installWithNotificationName:UIApplicationOpenURLWithSourceApplicationNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url, id sourceApplication, id annotation) {
-                    NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationOpenURLWithSourceApplicationNotification clazz:clazz target:self];
-                    [invocation setArgument:&application atIndex:2];
-                    [invocation setArgument:&url atIndex:3];
-                    [invocation setArgument:&sourceApplication atIndex:4];
-                    [invocation setArgument:&annotation atIndex:5];
-                    BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationOpenURLWithSourceApplicationNotification].addSucceeded;
-                    id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-                    NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                    if (url)
-                    {
-                        [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
-                    }
-                    if (sourceApplication)
-                    {
-                        [userinfo setObject:sourceApplication forKey:UIApplicationOpenURLOptionsSourceApplicationKey];
-                    }
-                    if (annotation)
-                    {
-                        [userinfo setObject:annotation forKey:UIApplicationOpenURLOptionsAnnotationKey];
-                    }
-                    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithSourceApplicationNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
-                    return returnValue;
-                }];
+                [userinfo setObject:remoteNotificationUserInfo forKey:UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification];
             }
-            
-            [AppDelegateExtension installWithNotificationName:UIApplicationContinueUserActivityNotification clazz:clazz block:^BOOL(NSObject *self, id application, id userActivity, id restorationHandler) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationContinueUserActivityNotification clazz:clazz target:self];
+            if (fetchCompletionHandler)
+            {
+                [userinfo setObject:[fetchCompletionHandler copy] forKey:UIApplicationFetchCompletionHandlerKey];
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
+            return returnValue;
+        }];
+        
+        [AppDelegateExtension installWithNotificationName:UIApplicationDidReceiveLocalNotification clazz:clazz block:^BOOL(NSObject *self, id application, id localNotification) {
+            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationDidReceiveLocalNotification clazz:clazz target:self];
+            [invocation setArgument:&application atIndex:2];
+            [invocation setArgument:&localNotification atIndex:3];
+            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationDidReceiveLocalNotification].addSucceeded;
+            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidReceiveLocalNotification object:application userInfo:localNotification ? @{UIApplicationLocalNotificationKey : localNotification} : nil];
+            return returnValue;
+        }];
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0)
+        {
+            [AppDelegateExtension installWithNotificationName:UIApplicationOpenURLWithOptionsNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url, id options) {
+                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationOpenURLWithOptionsNotification clazz:clazz target:self];
                 [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&userActivity atIndex:3];
-                [invocation setArgument:&restorationHandler atIndex:4];
-                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationContinueUserActivityNotification].addSucceeded;
+                [invocation setArgument:&url atIndex:3];
+                [invocation setArgument:&options atIndex:4];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationOpenURLWithOptionsNotification].addSucceeded;
                 id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (userActivity)
+                if (url)
                 {
-                    [userinfo setObject:userActivity forKey:UIApplicationContinueUserActivityKey];
+                    [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
                 }
-                if (restorationHandler)
+                if (options)
                 {
-                    [userinfo setObject:restorationHandler forKey:UIApplicationRestorationHandlerKey];
+                    [userinfo setObject:options forKey:UIApplicationURLOptionsKey];
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationContinueUserActivityNotification object:application userInfo:[userinfo copy]];
+                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithOptionsNotification object:application userInfo:[userinfo copy]];
+                return returnValue;
+            }];
+        }
+        else
+        {
+            [AppDelegateExtension installWithNotificationName:UIApplicationHandleOpenURLNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url) {
+                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationHandleOpenURLNotification clazz:clazz target:self];
+                [invocation setArgument:&application atIndex:2];
+                [invocation setArgument:&url atIndex:3];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationHandleOpenURLNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleOpenURLNotification object:application userInfo:url ? @{UIApplicationOpenURLOptionsURLKey : url} : nil];
                 return returnValue;
             }];
             
-            [AppDelegateExtension installWithNotificationName:UIApplicationPerformActionForShortcutItemNotification clazz:clazz block:^BOOL(NSObject *self, id application, id item, id handler) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationPerformActionForShortcutItemNotification clazz:clazz target:self];
+            [AppDelegateExtension installWithNotificationName:UIApplicationOpenURLWithSourceApplicationNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url, id sourceApplication, id annotation) {
+                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationOpenURLWithSourceApplicationNotification clazz:clazz target:self];
                 [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&item atIndex:3];
-                [invocation setArgument:&handler atIndex:4];
-                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationPerformActionForShortcutItemNotification].addSucceeded;
+                [invocation setArgument:&url atIndex:3];
+                [invocation setArgument:&sourceApplication atIndex:4];
+                [invocation setArgument:&annotation atIndex:5];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationOpenURLWithSourceApplicationNotification].addSucceeded;
                 id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
                 NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (item)
+                if (url)
                 {
-                    [userinfo setObject:item forKey:UIApplicationShortcutItemKey];
+                    [userinfo setObject:url forKey:UIApplicationOpenURLOptionsURLKey];
                 }
-                if (handler)
+                if (sourceApplication)
                 {
-                    [userinfo setObject:handler forKey:UIApplicationCompletionHandlerKey];
+                    [userinfo setObject:sourceApplication forKey:UIApplicationOpenURLOptionsSourceApplicationKey];
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationPerformActionForShortcutItemNotification object:application userInfo:[userinfo copy]];
-                return returnValue;
-            }];
-            
-            [AppDelegateExtension installWithNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification clazz:clazz block:^BOOL(NSObject *self, id application, id userInfo, id reply) {
-                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification clazz:clazz target:self];
-                [invocation setArgument:&application atIndex:2];
-                [invocation setArgument:&userInfo atIndex:3];
-                [invocation setArgument:&reply atIndex:4];
-                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationHandleWatchKitExtensionRequestNotification].addSucceeded;
-                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-                if (userInfo)
+                if (annotation)
                 {
-                    [userinfo setObject:userInfo forKey:UIApplicationWatchKitExtensionRequestUserInfoKey];
+                    [userinfo setObject:annotation forKey:UIApplicationOpenURLOptionsAnnotationKey];
                 }
-                if (reply)
-                {
-                    [userinfo setObject:reply forKey:UIApplicationWatchKitExtensionReplyKey];
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification object:application userInfo:[userinfo copy]];
+                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationOpenURLWithSourceApplicationNotification object:application userInfo:userinfo.count ? [userinfo copy] : nil];
                 return returnValue;
             }];
         }
         
+        [AppDelegateExtension installWithNotificationName:UIApplicationContinueUserActivityNotification clazz:clazz block:^BOOL(NSObject *self, id application, id userActivity, id restorationHandler) {
+            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationContinueUserActivityNotification clazz:clazz target:self];
+            [invocation setArgument:&application atIndex:2];
+            [invocation setArgument:&userActivity atIndex:3];
+            [invocation setArgument:&restorationHandler atIndex:4];
+            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationContinueUserActivityNotification].addSucceeded;
+            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+            NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+            if (userActivity)
+            {
+                [userinfo setObject:userActivity forKey:UIApplicationContinueUserActivityKey];
+            }
+            if (restorationHandler)
+            {
+                [userinfo setObject:[restorationHandler copy] forKey:UIApplicationRestorationHandlerKey];
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationContinueUserActivityNotification object:application userInfo:[userinfo copy]];
+            return returnValue;
+        }];
+        
+        [AppDelegateExtension installWithNotificationName:UIApplicationPerformActionForShortcutItemNotification clazz:clazz block:^BOOL(NSObject *self, id application, id item, id handler) {
+            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationPerformActionForShortcutItemNotification clazz:clazz target:self];
+            [invocation setArgument:&application atIndex:2];
+            [invocation setArgument:&item atIndex:3];
+            [invocation setArgument:&handler atIndex:4];
+            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationPerformActionForShortcutItemNotification].addSucceeded;
+            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+            NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+            if (item)
+            {
+                [userinfo setObject:item forKey:UIApplicationShortcutItemKey];
+            }
+            if (handler)
+            {
+                [userinfo setObject:[handler copy] forKey:UIApplicationCompletionHandlerKey];
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationPerformActionForShortcutItemNotification object:application userInfo:[userinfo copy]];
+            return returnValue;
+        }];
+        
+        [AppDelegateExtension installWithNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification clazz:clazz block:^BOOL(NSObject *self, id application, id userInfo, id reply) {
+            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification clazz:clazz target:self];
+            [invocation setArgument:&application atIndex:2];
+            [invocation setArgument:&userInfo atIndex:3];
+            [invocation setArgument:&reply atIndex:4];
+            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationHandleWatchKitExtensionRequestNotification].addSucceeded;
+            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+            NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+            if (userInfo)
+            {
+                [userinfo setObject:userInfo forKey:UIApplicationWatchKitExtensionRequestUserInfoKey];
+            }
+            if (reply)
+            {
+                [userinfo setObject:reply forKey:UIApplicationWatchKitExtensionReplyKey];
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification object:application userInfo:[userinfo copy]];
+            return returnValue;
+        }];
     });
 }
 
