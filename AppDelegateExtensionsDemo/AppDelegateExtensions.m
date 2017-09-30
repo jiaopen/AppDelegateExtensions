@@ -354,6 +354,26 @@ void installAppDelegateExtensionsWithClass(Class clazz)
         }];
         if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0)
         {
+            [AppDelegateExtension installWithNotificationName:UIApplicationPerformActionForShortcutItemNotification clazz:clazz block:^BOOL(NSObject *self, id application, id item, id handler) {
+                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationPerformActionForShortcutItemNotification clazz:clazz target:self];
+                [invocation setArgument:&application atIndex:2];
+                [invocation setArgument:&item atIndex:3];
+                [invocation setArgument:&handler atIndex:4];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationPerformActionForShortcutItemNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+                if (item)
+                {
+                    [userinfo setObject:item forKey:UIApplicationShortcutItemKey];
+                }
+                if (handler)
+                {
+                    [userinfo setObject:[handler copy] forKey:UIApplicationCompletionHandlerKey];
+                }
+                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationPerformActionForShortcutItemNotification object:application userInfo:[userinfo copy]];
+                return returnValue;
+            }];
+            
             [AppDelegateExtension installWithNotificationName:UIApplicationOpenURLWithOptionsNotification clazz:clazz block:^BOOL(NSObject *self, id application, id url, id options) {
                 NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationOpenURLWithOptionsNotification clazz:clazz target:self];
                 [invocation setArgument:&application atIndex:2];
@@ -431,49 +451,30 @@ void installAppDelegateExtensionsWithClass(Class clazz)
             [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationContinueUserActivityNotification object:application userInfo:[userinfo copy]];
             return returnValue;
         }];
-        
-        [AppDelegateExtension installWithNotificationName:UIApplicationPerformActionForShortcutItemNotification clazz:clazz block:^BOOL(NSObject *self, id application, id item, id handler) {
-            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationPerformActionForShortcutItemNotification clazz:clazz target:self];
-            [invocation setArgument:&application atIndex:2];
-            [invocation setArgument:&item atIndex:3];
-            [invocation setArgument:&handler atIndex:4];
-            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationPerformActionForShortcutItemNotification].addSucceeded;
-            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-            NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-            if (item)
-            {
-                [userinfo setObject:item forKey:UIApplicationShortcutItemKey];
-            }
-            if (handler)
-            {
-                [userinfo setObject:[handler copy] forKey:UIApplicationCompletionHandlerKey];
-            }
-            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationPerformActionForShortcutItemNotification object:application userInfo:[userinfo copy]];
-            return returnValue;
-        }];
-        
-        [AppDelegateExtension installWithNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification clazz:clazz block:^BOOL(NSObject *self, id application, id userInfo, id reply) {
-            NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification clazz:clazz target:self];
-            [invocation setArgument:&application atIndex:2];
-            [invocation setArgument:&userInfo atIndex:3];
-            [invocation setArgument:&reply atIndex:4];
-            BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationHandleWatchKitExtensionRequestNotification].addSucceeded;
-            id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
-            NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
-            if (userInfo)
-            {
-                [userinfo setObject:userInfo forKey:UIApplicationWatchKitExtensionRequestUserInfoKey];
-            }
-            if (reply)
-            {
-                [userinfo setObject:reply forKey:UIApplicationWatchKitExtensionReplyKey];
-            }
-            [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification object:application userInfo:[userinfo copy]];
-            return returnValue;
-        }];
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.2)
+        {
+            [AppDelegateExtension installWithNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification clazz:clazz block:^BOOL(NSObject *self, id application, id userInfo, id reply) {
+                NSInvocation *invocation = [NSInvocation adext_invocationWithNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification clazz:clazz target:self];
+                [invocation setArgument:&application atIndex:2];
+                [invocation setArgument:&userInfo atIndex:3];
+                [invocation setArgument:&reply atIndex:4];
+                BOOL addSucceeded = [AppDelegateExtension extensions][UIApplicationHandleWatchKitExtensionRequestNotification].addSucceeded;
+                id returnValue = [invocation adext_returnValueWithAddResult:addSucceeded];
+                NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
+                if (userInfo)
+                {
+                    [userinfo setObject:userInfo forKey:UIApplicationWatchKitExtensionRequestUserInfoKey];
+                }
+                if (reply)
+                {
+                    [userinfo setObject:reply forKey:UIApplicationWatchKitExtensionReplyKey];
+                }
+                [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationHandleWatchKitExtensionRequestNotification object:application userInfo:[userinfo copy]];
+                return returnValue;
+            }];
+        }
     });
 }
-
 
 #pragma clang diagnostic pop
 
