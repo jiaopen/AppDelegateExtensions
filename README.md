@@ -1,4 +1,4 @@
-# AppDelegateExtensions
+# AppDelegateExtension
 使用通知和runtime-AOP的为AppDelegate瘦身方案
 
 ### 使用姿势
@@ -34,3 +34,12 @@ UIKIT_EXTERN NSNotificationName const UIApplicationHandleWatchKitExtensionReques
 具体细节：http://www.jianshu.com/p/a926fd605b7a
 
 代码中参考了BlocksKit和libextobjc的实现，感谢两位大神的精彩code
+
+#### Podfile
+
+可以使用cocoapods集成
+
+```ruby
+pod 'AppDelegateExtension', '~> 0.1.0'
+
+```
