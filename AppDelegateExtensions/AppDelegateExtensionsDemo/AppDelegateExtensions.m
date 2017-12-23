@@ -333,7 +333,7 @@ void installAppDelegateExtensionsWithClass(Class clazz)
             NSMutableDictionary *userinfo = [NSMutableDictionary dictionary];
             if (remoteNotificationUserInfo)
             {
-                [userinfo setObject:remoteNotificationUserInfo forKey:UIApplicationDidReceiveRemoteWithFetchCompletionHandlerNotification];
+                [userinfo setObject:remoteNotificationUserInfo forKey:UIApplicationRemoteNoficationUserInfoKey];
             }
             if (fetchCompletionHandler)
             {
