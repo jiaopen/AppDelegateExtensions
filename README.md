@@ -3,7 +3,9 @@
 
 ### 使用姿势
 objective-C的工程
+
 main.m：
+
 ```objc
 int main(int argc, char * argv[]) {
     @autoreleasepool {
@@ -14,8 +16,11 @@ int main(int argc, char * argv[]) {
 ```
 
 swift的工程
+
 1.删除AppDelegate.swift中的@UIApplicationMain
+
 2.添加main.swift到工程里并添加：
+
 ```swift
 installAppDelegateExtensionsWithClass(AppDelegate.self)
 
