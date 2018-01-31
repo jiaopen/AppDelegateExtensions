@@ -2,12 +2,29 @@
 使用通知和runtime-AOP的为AppDelegate瘦身方案
 
 ### 使用姿势
-在你的AppDelegate中：
+objective-C的工程
+main.m：
 ```objc
-+ (void)load
-{
-    installAppDelegateExtensionsWithClass(self);
+int main(int argc, char * argv[]) {
+    @autoreleasepool {
+        installAppDelegateExtensionsWithClass([AppDelegate class]);
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+    }
 }
+```
+
+swift的工程
+1.删除AppDelegate.swift中的@UIApplicationMain
+2.添加main.swift到工程里并添加：
+```swift
+installAppDelegateExtensionsWithClass(AppDelegate.self)
+
+UIApplicationMain(
+    CommandLine.argc,
+    UnsafeMutableRawPointer(CommandLine.unsafeArgv).bindMemory(to: UnsafeMutablePointer<Int8>.self, capacity: Int(CommandLine.argc)),
+    nil,
+    NSStringFromClass(AppDelegate.self)
+)
 ```
 
 添加了以下这些Notification key
